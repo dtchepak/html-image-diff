@@ -47,16 +47,16 @@ window.onload = function() {
         <h1>Image diff</h1>
 
         <div id="settings">
+            <p>
             <input type="file" id="file1" accept="image/png, image/jpeg" />
             <input type="file" id="file2" accept="image/png, image/jpeg" />
-        </div>
-
-        <div>
-            <div>Left image <input type="range" id="opacitySlider" /> Right image</div>
-            <div>
+            </p>
+            <p>Left image <input type="range" id="opacitySlider" /> Right image</p>
+            <p>
                 <input type="checkbox" id="colouriseOriginal" name="colouriseOriginal" />
                 <label for="colouriseOriginal">Adjust hue of left image</label>
-            </div>
+            </p>
+            <p style="font-size: xx-small;"><a href="https://github.com/dtchepak/html-image-diff">Source on GitHub</a></p>
         </div>
 
         <div id="imageContainer" style="position: relative">
