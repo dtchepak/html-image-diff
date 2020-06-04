@@ -2,25 +2,24 @@
 <html>
     <head>
         <title>Image diff</title>
+        <style>
+            html {
+                font-size: 100%;
+                font-family:Arial, Helvetica, sans-serif;
+            }
+        </style>
     <script>
 
 function byId(id) { return document.getElementById(id); }
 
-function clearChildren(elem) {
-    while (elem.firstChild) {
-        elem.firstChild.remove();
+function setImage(file, img) {
+    if (file.files.length === 1) {
+        const f = file.files[0];
+        // based on: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
+        const reader = new FileReader();
+        reader.onload = e => img.src = e.target.result;
+        reader.readAsDataURL(f);
     }
-}
-
-function setImage(file, elem) {
-    clearChildren(elem);
-    const img = document.createElement("img");
-    elem.appendChild(img);
-
-    // based on: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
-    const reader = new FileReader();
-    reader.onload = e => img.src = e.target.result;
-    reader.readAsDataURL(file);
 }
 
 window.onload = function() {
@@ -28,13 +27,18 @@ window.onload = function() {
     const file2 = byId("file2");
     const image1 = byId("image1");
     const image2 = byId("image2");
-    byId("compare").onclick = function(e) {
-        setImage(file1.files[0], image1);
-        setImage(file2.files[0], image2);
-    }
+    file1.onchange = e => setImage(file1, image1)
+    file2.onchange = e => setImage(file2, image2);
     byId("opacitySlider").oninput = function(e) {
         const value = e.target.value;
         image2.style.opacity = value / 100.0;
+    }
+    byId("colouriseOriginal").onchange = function(e) {
+        if (e.target.checked) {
+            image1.style.filter = "hue-rotate(180deg)";
+        } else {
+            image1.style.filter = "";
+        }
     }
 }
     </script>
@@ -45,16 +49,19 @@ window.onload = function() {
         <div id="settings">
             <input type="file" id="file1" accept="image/png, image/jpeg" />
             <input type="file" id="file2" accept="image/png, image/jpeg" />
-            <input type="button" id="compare" value="Compare" />
         </div>
 
         <div>
-            <input type="range" id="opacitySlider" />
+            <div>Left image <input type="range" id="opacitySlider" /> Right image</div>
+            <div>
+                <input type="checkbox" id="colouriseOriginal" name="colouriseOriginal" />
+                <label for="colouriseOriginal">Adjust hue of left image</label>
+            </div>
         </div>
 
         <div id="imageContainer" style="position: relative">
-            <div id="image1" style="position: absolute"></div>
-            <div id="image2" style="position: absolute; opacity: 0.5"></div>
+            <img id="image1" style="position: absolute"></div>
+            <img id="image2" style="position: absolute; opacity: 0.5"></div>
         </div>
     </body>
 </html>
